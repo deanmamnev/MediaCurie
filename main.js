@@ -52,7 +52,7 @@ $("#searchButton").on("click", function (event) {
         resultDiv.append(resultImg)
         resultDiv.append(resultBody)
 
-        resultLink.attr("id",i)
+        resultLink.attr("result-number", i)
         resultLink.addClass("link")
 
         $("#searchResults").append(resultDiv)
@@ -61,10 +61,44 @@ $("#searchButton").on("click", function (event) {
   }
 })
 
-$(document.body).on("click", ".link", function() {
-  var i = parseInt($(this).attr("id"))
-  console.log(searchResults[i])
+$(document.body).on("click", ".link", function () {
+  var i = parseInt($(this).attr("result-number"))
+  //console.log(searchResults[i])
+  $("#searchResults").empty()
+  //$("#searchResults").text("Loading...")
+  var contentDiv = $("<div>")
+  contentDiv.addClass("card align-center")
+
+  var titleH = $("<h1>")
+  titleH.addClass("card-header align-center")
+  titleH.text(searchResults[i].name)
+  contentDiv.append(titleH)
+
+  //var platformsH = $("<h2>")
+  //platformsH.addClass("card-title align-center")
+  //
+  //contentDiv.append(titleH)
+
+
+  var descriptionP = $("<p>")
+  descriptionP.addClass("card-text")
+  
+  if (searchResults[i].description == null) {
+    var imageImg = $("<img>")
+    imageImg.addClass("pull-left")
+    imageImg.attr("src",searchResults[i].image.original_url)
+    imageImg.attr("style","width:20%;height:auto;")
+    descriptionP.append(imageImg)
+    descriptionP.append(searchResults[i].deck)
+  } else {
+    descriptionP.html(searchResults[i].description)
+  }
+  contentDiv.append(descriptionP)
+
+  $("#searchResults").append(contentDiv)
+
 })
+
 
 //<div class="card" style="width: 18rem;">
 //<img class="card-img-top" src="..." alt="Card image cap">
