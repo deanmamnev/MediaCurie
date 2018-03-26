@@ -1,6 +1,4 @@
 var searchResults = [];
-var imdbID = ""
-var idArr = []
 
 $("#searchButton").on("click", function (event) {
   event.preventDefault()
@@ -104,8 +102,6 @@ $("#searchButton").on("click", function (event) {
         $("#searchResults").empty()
         searchResults = response.Search
         for (var i = 0; i < searchResults.length; i++) {
-
-          console.log(searchResults[i].imdbID)
           //div for results
           var resultDiv = $("<div>")
           resultDiv.addClass("card")
@@ -157,57 +153,56 @@ $("#searchButton").on("click", function (event) {
       "method": "GET",
     }).then(function (response) {
       $("#searchResults").empty()
-      searchResults = response.results
-      for (var i = 0; i < searchResults.length; i++) {
-        var resultDiv = $("<div>")
-        resultDiv.addClass("card")
-        resultDiv.attr("style", "margin:16px;width:316px;")
-
-        var resultImg = $("<img>")
-        resultImg.addClass("card-img-top mx-auto")
-        resultImg.attr("src", searchResults[i].image.original_url)
-        resultImg.attr("style", "width:300px;height:auto;align:center;")
-        //console.log(searchResults[i].image.icon_ur)
-
-        var resultBody = $("<div>")
-        resultBody.addClass("card-body")
-
-        var resultTitle = $("<h5>")
-        resultTitle.addClass("card-text")
-        resultTitle.text(searchResults[i].name)
-        var resultText = $("<p>")
-        resultText.addClass("card-text")
-        resultText.text(searchResults[i].deck)
-        var resultLink = $("<button>")
-        resultLink.attr("class", "btn btn-primary")
-        resultLink.text("More Information")
-        //var resultImgRow = $("<tr>")
-        // var resultTitleRow = $("<tr>")
-        // var resultTextRow = $("<tr>")
-        // var resultTable = $("<table>")
-
-        resultBody.append(resultTitle)
-        resultBody.append(resultText)
-        resultBody.append(resultLink)
-
-        resultDiv.append(resultImg)
-        resultDiv.append(resultBody)
-
-        resultLink.attr("result-number", i)
-        resultLink.addClass("link")
-
-        $("#searchResults").append(resultDiv)
-
+      if (response.number_of_total_results == 0) {
+        var errorMessage = $("<h6>")
+        errorMessage.addClass("alert alert-warning")
+        errorMessage.text("Game not found!")
+        $("#searchResults").html(errorMessage)
+      } else {
+        searchResults = response.results
+        for (var i = 0; i < searchResults.length; i++) {
+          var resultDiv = $("<div>")
+          resultDiv.addClass("card")
+          resultDiv.attr("style", "margin:16px;width:316px;")
+          var resultImg = $("<img>")
+          resultImg.addClass("card-img-top mx-auto")
+          resultImg.attr("src", searchResults[i].image.original_url)
+          resultImg.attr("style", "width:300px;height:auto;align:center;")
+          var resultBody = $("<div>")
+          resultBody.addClass("card-body")
+          var resultTitle = $("<h5>")
+          resultTitle.addClass("card-text")
+          resultTitle.text(searchResults[i].name)
+          var resultText = $("<p>")
+          resultText.addClass("card-text")
+          resultText.text(searchResults[i].deck)
+          var resultLink = $("<button>")
+          resultLink.attr("class", "btn btn-primary")
+          resultLink.text("More Information")
+          //var resultImgRow = $("<tr>")
+          // var resultTitleRow = $("<tr>")
+          // var resultTextRow = $("<tr>")
+          // var resultTable = $("<table>")
+          resultBody.append(resultTitle)
+          resultBody.append(resultText)
+          resultBody.append(resultLink)
+          resultDiv.append(resultImg)
+          resultDiv.append(resultBody)
+          resultLink.attr("result-number", i)
+          resultLink.addClass("link")
+          $("#searchResults").append(resultDiv)
+        }
       }
     });
   }
+
+
 })
 
 
 //on click info button for video games 
 $(document.body).on("click", ".link", function () {
   var i = parseInt($(this).attr("result-number"))
-  //console.log(searchResults[i])
   $("#searchResults").empty()
   //$("#searchResults").text("Loading...")
   var contentDiv = $("<div>")
@@ -249,8 +244,6 @@ $(document.body).on("click", ".link", function () {
 $(document.body).on("click", ".tvLink", function () {
   var i = parseInt($(this).attr("result-number"))
   var title = $(this).attr("title")
-  console.log(title)
-  //console.log(searchResults[i])
   $("#searchResults").empty()
   var contentDiv = $("<div>")
   contentDiv.addClass("card align-center")
@@ -268,26 +261,29 @@ $(document.body).on("click", ".tvLink", function () {
   }
 
   $.ajax(settings).then(function (response) {
-    // console.log(response);
     var vidResult = response.items
-    console.log(vidResult)
-
     for (var i = 0; i < vidResult.length; i++) {
-      console.log(vidResult[i].snippet.title)
-      console.log(vidResult[i].snippet.description)
-      console.log(vidResult[i].snippet.thumbnails.default.url)
+      var cardDiv = $("<div>")
+      cardDiv.addClass("card align-center m-2")
+      var contentDiv = $("<div>")
+      contentDiv.addClass("card-body align-center")
+
+      var videoTag = $("<iframe>")
+      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId )
+      videoTag.attr("width", "400px")
+      videoTag.attr("height", "250px")
+      contentDiv.append(videoTag)
 
       var titleH = $("<h1>")
       titleH.addClass("card-header align-center")
       titleH.text(vidResult[i].snippet.title)
-      contentDiv.append(titleH)
+      cardDiv.append(titleH)
 
-      var description = $("<h3>")
-      description.addClass("card-body align-center")
+      var description = $("<h6>")
       description.text(vidResult[i].snippet.description)
-      contentDiv.append(description)
-
-      $("#searchResults").append(contentDiv)
+      contentDiv.prepend(description)
+      cardDiv.append(contentDiv)
+      $("#searchResults").append(cardDiv)
 
 
     }
@@ -299,8 +295,6 @@ $(document.body).on("click", ".tvLink", function () {
 $(document.body).on("click", ".movieLink", function () {
   var i = parseInt($(this).attr("result-number"))
   var title = $(this).attr("title")
-  console.log(title)
-  //console.log(searchResults[i])
   $("#searchResults").empty()
 
   var settings = {
@@ -315,33 +309,20 @@ $(document.body).on("click", ".movieLink", function () {
   }
 
   $.ajax(settings).then(function (response) {
-    // console.log(response);
     var vidResult = response.items
-    console.log(vidResult)
-
     for (var i = 0; i < vidResult.length; i++) {
-      console.log(vidResult[i].snippet.title)
-      console.log(vidResult[i].snippet.description)
-      console.log(vidResult[i].snippet.thumbnails.default.url)
-      console.log(vidResult[i].snippet.thumbnails.default.height)
-      console.log(vidResult[i].snippet.thumbnails.default.width)
+      
 
       var cardDiv = $("<div>")
       cardDiv.addClass("card align-center m-2")
       var contentDiv = $("<div>")
       contentDiv.addClass("card-body align-center")
 
-      //     <iframe width="420" height="315"
-      // src="https://www.youtube.com/embed/tgbNymZ7vqY">
-      // </iframe>
-      
-
       var videoTag = $("<iframe>")
-      videoTag.attr("src", vidResult[i].snippet.thumbnails.default.url)
-      videoTag.attr("width", vidResult[i].snippet.thumbnails.default.width)
-      videoTag.attr("height", vidResult[i].snippet.thumbnails.default.height)
-      console.log(videoTag)
-      videoTag.append(contentDiv)
+      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId )
+      videoTag.attr("width", "400px")
+   
+      contentDiv.append(videoTag)
 
 
       var titleH = $("<h1>")
@@ -349,9 +330,9 @@ $(document.body).on("click", ".movieLink", function () {
       titleH.text(vidResult[i].snippet.title)
       cardDiv.append(titleH)
 
-      var description = $("<h3>")
+      var description = $("<h6>")
       description.text(vidResult[i].snippet.description)
-      contentDiv.append(description)
+      contentDiv.prepend(description)
       cardDiv.append(contentDiv)
       $("#searchResults").append(cardDiv)
 
@@ -360,17 +341,4 @@ $(document.body).on("click", ".movieLink", function () {
   });
 
 })//closes tv click 
-
-
-
-//<div class="card" style="width: 18rem;">
-//<img class="card-img-top" src="..." alt="Card image cap">
-//<div class="card-body">
-///    <h5 class="card-title">Card title</h5>
-//    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-//    <a href="#" class="btn btn-primary">Go somewhere</a>
-//</div>
-//</div>
-
-
 
