@@ -1,9 +1,37 @@
 var searchResults = [];
 
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyACugXT2FoNNsrAbVzT-afmwbj_ZoTYaE4",
+  authDomain: "proj1-b2ca9.firebaseapp.com",
+  databaseURL: "https://proj1-b2ca9.firebaseio.com",
+  projectId: "proj1-b2ca9",
+  storageBucket: "proj1-b2ca9.appspot.com",
+  messagingSenderId: "538009945890"
+};
+firebase.initializeApp(config);
+//set database variable
+var database = firebase.database()
+
+var searchRef = database.ref("/searches")
+var newSearchRef= searchRef.push()
+var userSearch = ""
+
+newSearchRef.ref.equalTo(userSearch).on("child_added", function(snapshot){
+  searchCount ++
+})
+
+
 $("#searchButton").on("click", function (event) {
   event.preventDefault()
   $("#searchResults").empty()
   $("#searchResults").html("Loading...")
+
+  userSearch = $("#searchField").val()
+  newSearchRef.set({
+    userSearch: userSearch,
+    searchCount: 0
+  })
 
   //store user input as topic var
   var topic = $("#searchField").val()
@@ -163,7 +191,7 @@ $("#searchButton").on("click", function (event) {
           text: "Please try again",
           icon: "error",
         });
-    
+
       } else {
         searchResults = response.results
         for (var i = 0; i < searchResults.length; i++) {
@@ -231,8 +259,8 @@ $(document.body).on("click", ".link", function () {
   if (searchResults[i].description == null) {
     var imageImg = $("<img>")
     imageImg.addClass("pull-left")
-    imageImg.attr("src",searchResults[i].image.original_url)
-    imageImg.attr("style","width:20%;height:auto;")
+    imageImg.attr("src", searchResults[i].image.original_url)
+    imageImg.attr("style", "width:20%;height:auto;")
 
     descriptionP.append(imageImg)
     descriptionP.append(searchResults[i].deck)
@@ -263,7 +291,7 @@ $(document.body).on("click", ".tvLink", function () {
     "headers": {
       "Cache-Control": "no-cache",
       "Postman-Token": "17addf34-eefe-4c61-9807-69c58abb307a",
-      
+
     }
   }
 
@@ -276,7 +304,7 @@ $(document.body).on("click", ".tvLink", function () {
       contentDiv.addClass("card-body align-center")
 
       var videoTag = $("<iframe>")
-      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId )
+      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId)
       videoTag.attr("width", "400px")
       videoTag.attr("height", "250px")
       contentDiv.append(videoTag)
@@ -318,7 +346,7 @@ $(document.body).on("click", ".movieLink", function () {
   $.ajax(settings).then(function (response) {
     var vidResult = response.items
     for (var i = 0; i < vidResult.length; i++) {
-      
+
 
       var cardDiv = $("<div>")
       cardDiv.addClass("card align-center m-2")
@@ -326,9 +354,9 @@ $(document.body).on("click", ".movieLink", function () {
       contentDiv.addClass("card-body align-center")
 
       var videoTag = $("<iframe>")
-      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId )
+      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId)
       videoTag.attr("width", "400px")
-   
+
       contentDiv.append(videoTag)
 
 
