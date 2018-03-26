@@ -31,7 +31,7 @@ $("#searchButton").on("click", function (event) {
       else {
         $("#searchResults").empty()
         searchResults = response.Search
-       
+
         for (var i = 0; i < searchResults.length; i++) {
           //div for each result
           var resultDiv = $("<div>")
@@ -52,12 +52,12 @@ $("#searchButton").on("click", function (event) {
           //years on air
           var resultText = $("<p>")
           resultText.addClass("card-text")
-          resultText.text("Years on the Air: " + searchResults[i].Year)          
+          resultText.text("Years on the Air: " + searchResults[i].Year)
           //link to details
           var resultLink = $("<button>")
           resultLink.attr("class", "btn btn-primary")
           resultLink.text("More Information")
-         
+
           //apend text to body 
           resultBody.append(resultTitle)
           resultBody.append(resultText)
@@ -67,7 +67,8 @@ $("#searchButton").on("click", function (event) {
           resultDiv.append(resultBody)
           //attribute for details button 
           resultLink.attr("result-number", i)
-          resultLink.addClass("link")
+          resultLink.attr("title", searchResults[i].Title)
+          resultLink.addClass("tvLink")
           //display results to DOM
           $("#searchResults").append(resultDiv)
 
@@ -90,7 +91,7 @@ $("#searchButton").on("click", function (event) {
       "method": "GET",
 
     }).then(function (response) {
-      console.log(response)
+
       //error message pop up vs display info
       if (response.Response == "False") {
         var errorMessage = $("<h6>")
@@ -103,6 +104,8 @@ $("#searchButton").on("click", function (event) {
         $("#searchResults").empty()
         searchResults = response.Search
         for (var i = 0; i < searchResults.length; i++) {
+
+          console.log(searchResults[i].imdbID)
           //div for results
           var resultDiv = $("<div>")
           resultDiv.addClass("card")
@@ -136,8 +139,9 @@ $("#searchButton").on("click", function (event) {
           resultDiv.append(resultBody)
           //attribute to track details button
           resultLink.attr("result-number", i)
-          resultLink.addClass("link")
-          
+          resultLink.attr("title", searchResults[i].Title)
+          resultLink.addClass("movieLink")
+
           //display results on DO<M
           $("#searchResults").append(resultDiv)
         }
@@ -237,6 +241,122 @@ $(document.body).on("click", ".link", function () {
   $("#searchResults").append(contentDiv)
 
 })
+
+//onclick detials for tv 
+$(document.body).on("click", ".tvLink", function () {
+  var i = parseInt($(this).attr("result-number"))
+  var title = $(this).attr("title")
+  console.log(title)
+  //console.log(searchResults[i])
+  $("#searchResults").empty()
+  var contentDiv = $("<div>")
+  contentDiv.addClass("card align-center")
+
+
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=" + title + "&key=AIzaSyDcyyGyFqaZsSndJxToEMEeE34xJM-UTA4",
+    "method": "GET",
+    "headers": {
+      "Cache-Control": "no-cache",
+      "Postman-Token": "17addf34-eefe-4c61-9807-69c58abb307a"
+    }
+  }
+
+  $.ajax(settings).then(function (response) {
+    // console.log(response);
+    var vidResult = response.items
+    console.log(vidResult)
+
+    for (var i = 0; i < vidResult.length; i++) {
+      console.log(vidResult[i].snippet.title)
+      console.log(vidResult[i].snippet.description)
+      console.log(vidResult[i].snippet.thumbnails.default.url)
+
+      var titleH = $("<h1>")
+      titleH.addClass("card-header align-center")
+      titleH.text(vidResult[i].snippet.title)
+      contentDiv.append(titleH)
+
+      var description = $("<h3>")
+      description.addClass("card-body align-center")
+      description.text(vidResult[i].snippet.description)
+      contentDiv.append(description)
+
+      $("#searchResults").append(contentDiv)
+
+
+    }
+  });
+
+})//closes tv click
+
+//onclick detials for movies 
+$(document.body).on("click", ".movieLink", function () {
+  var i = parseInt($(this).attr("result-number"))
+  var title = $(this).attr("title")
+  console.log(title)
+  //console.log(searchResults[i])
+  $("#searchResults").empty()
+
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=" + title + "&key=AIzaSyDcyyGyFqaZsSndJxToEMEeE34xJM-UTA4",
+    "method": "GET",
+    "headers": {
+      "Cache-Control": "no-cache",
+      "Postman-Token": "17addf34-eefe-4c61-9807-69c58abb307a"
+    }
+  }
+
+  $.ajax(settings).then(function (response) {
+    // console.log(response);
+    var vidResult = response.items
+    console.log(vidResult)
+
+    for (var i = 0; i < vidResult.length; i++) {
+      console.log(vidResult[i].snippet.title)
+      console.log(vidResult[i].snippet.description)
+      console.log(vidResult[i].snippet.thumbnails.default.url)
+      console.log(vidResult[i].snippet.thumbnails.default.height)
+      console.log(vidResult[i].snippet.thumbnails.default.width)
+
+      var cardDiv = $("<div>")
+      cardDiv.addClass("card align-center m-2")
+      var contentDiv = $("<div>")
+      contentDiv.addClass("card-body align-center")
+
+      //     <iframe width="420" height="315"
+      // src="https://www.youtube.com/embed/tgbNymZ7vqY">
+      // </iframe>
+      
+
+      var videoTag = $("<iframe>")
+      videoTag.attr("src", vidResult[i].snippet.thumbnails.default.url)
+      videoTag.attr("width", vidResult[i].snippet.thumbnails.default.width)
+      videoTag.attr("height", vidResult[i].snippet.thumbnails.default.height)
+      console.log(videoTag)
+      videoTag.append(contentDiv)
+
+
+      var titleH = $("<h1>")
+      titleH.addClass("card-header align-center")
+      titleH.text(vidResult[i].snippet.title)
+      cardDiv.append(titleH)
+
+      var description = $("<h3>")
+      description.text(vidResult[i].snippet.description)
+      contentDiv.append(description)
+      cardDiv.append(contentDiv)
+      $("#searchResults").append(cardDiv)
+
+
+    }
+  });
+
+})//closes tv click 
 
 
 
