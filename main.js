@@ -203,7 +203,8 @@ $("#searchButton").on("click", function (event) {
   }
 })
 
-//on click info button for video games
+
+//on click info button for video games 
 $(document.body).on("click", ".link", function () {
   var i = parseInt($(this).attr("result-number"))
   //console.log(searchResults[i])
@@ -229,8 +230,9 @@ $(document.body).on("click", ".link", function () {
   if (searchResults[i].description == null) {
     var imageImg = $("<img>")
     imageImg.addClass("pull-left")
-    imageImg.attr("src", searchResults[i].image.original_url)
-    imageImg.attr("style", "width:20%;height:auto;")
+    imageImg.attr("src",searchResults[i].image.original_url)
+    imageImg.attr("style","width:20%;height:auto;")
+
     descriptionP.append(imageImg)
     descriptionP.append(searchResults[i].deck)
   } else {
@@ -241,6 +243,7 @@ $(document.body).on("click", ".link", function () {
   $("#searchResults").append(contentDiv)
 
 })
+
 
 //onclick detials for tv 
 $(document.body).on("click", ".tvLink", function () {
