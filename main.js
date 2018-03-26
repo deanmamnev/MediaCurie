@@ -19,10 +19,12 @@ $("#searchButton").on("click", function (event) {
     }).then(function (response) {
       //diplay error message if input invalid
       if (response.Response == "False") {
-        var errorMessage = $("<h6>")
-        errorMessage.addClass("alert alert-warning")
-        errorMessage.text(response.Error)
-        $("#searchResults").html(errorMessage)
+        swal({
+          title: response.Error,
+          text: "Please try again",
+          icon: "error",
+        });
+
       }
 
 
@@ -92,10 +94,11 @@ $("#searchButton").on("click", function (event) {
 
       //error message pop up vs display info
       if (response.Response == "False") {
-        var errorMessage = $("<h6>")
-        errorMessage.addClass("alert alert-warning")
-        errorMessage.text(response.Error)
-        $("#searchResults").html(errorMessage)
+        swal({
+          title: response.Error,
+          text: "Please try again",
+          icon: "error",
+        });
       }
 
       else {
@@ -151,13 +154,16 @@ $("#searchButton").on("click", function (event) {
     $.ajax({
       "url": queryURL,//+$("#searchField").val(),
       "method": "GET",
+
     }).then(function (response) {
       $("#searchResults").empty()
       if (response.number_of_total_results == 0) {
-        var errorMessage = $("<h6>")
-        errorMessage.addClass("alert alert-warning")
-        errorMessage.text("Game not found!")
-        $("#searchResults").html(errorMessage)
+        swal({
+          title: "Game not found!",
+          text: "Please try again",
+          icon: "error",
+        });
+    
       } else {
         searchResults = response.results
         for (var i = 0; i < searchResults.length; i++) {
@@ -256,7 +262,8 @@ $(document.body).on("click", ".tvLink", function () {
     "method": "GET",
     "headers": {
       "Cache-Control": "no-cache",
-      "Postman-Token": "17addf34-eefe-4c61-9807-69c58abb307a"
+      "Postman-Token": "17addf34-eefe-4c61-9807-69c58abb307a",
+      
     }
   }
 
