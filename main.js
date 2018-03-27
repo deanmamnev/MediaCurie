@@ -16,7 +16,7 @@ $("#searchButton").on("click", function (event) {
   $("#searchResults").append(loadingImg)
 
   //store user input as topic var
-  var topic = $("#searchField").val()
+  var topic = $("#searchField").val().trim()
 
   if ($("#searchOptions").val() == "tv") {
 
@@ -29,6 +29,7 @@ $("#searchButton").on("click", function (event) {
     }).then(function (response) {
       //diplay error message if input invalid
       if (response.Response == "False") {
+        $("#searchResults").empty()
         swal({
           title: response.Error,
           text: "Please try again",
@@ -111,6 +112,7 @@ $("#searchButton").on("click", function (event) {
 
       //error message pop up vs display info
       if (response.Response == "False") {
+        $("#searchResults").empty()
         swal({
           title: response.Error,
           text: "Please try again",
@@ -178,7 +180,7 @@ $("#searchButton").on("click", function (event) {
 
   if ($("#searchOptions").val() == "videogames") {
     queryURL =
-      "http://www.giantbomb.com/api/search/?api_key=a74fc2e122070c900f130b1686762de83101e99e&format=json&query=" + $("#searchField").val() + "&resources=game"
+      "http://www.giantbomb.com/api/search/?api_key=a74fc2e122070c900f130b1686762de83101e99e&format=json&query=" + topic+ "&resources=game"
     $.ajax({
       "url": queryURL,//+$("#searchField").val(),
       "method": "GET",
@@ -186,6 +188,7 @@ $("#searchButton").on("click", function (event) {
     }).then(function (response) {
       $("#searchResults").empty()
       if (response.number_of_total_results == 0) {
+        $("#searchResults").empty()
         swal({
           title: "Game not found!",
           text: "Please try again",
