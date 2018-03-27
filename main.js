@@ -1,4 +1,10 @@
 var searchResults = [];
+//on click of homebutton
+$("#home").on("click", function(event){
+  event.preventDefault()
+  //empty results div
+  $("#searchResults").empty()
+})
 
 $("#searchButton").on("click", function (event) {
   event.preventDefault()
