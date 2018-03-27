@@ -8,9 +8,8 @@ $("#home").on("click", function (event) {
 $("#searchButton").on("click", function (event) {
   event.preventDefault()
   $("#searchResults").empty()
-  //$("#searchResults").text("<img src='mediacurie-logo-animated.gif'>")
   var loadingImg = $("<img>")
-  loadingImg.attr("src", "MediaCurie-Logo-Animated.gif")
+  loadingImg.attr("src", "mediacurie-logo-animated.gif")
   loadingImg.attr("style", "align:center;margin:auto;")
   $("#searchResults").append(loadingImg)
   //store user input as topic var
@@ -56,7 +55,7 @@ $("#searchButton").on("click", function (event) {
           resultText.text("Years on the Air: " + searchResults[i].Year)
           //link to details
           var resultLink = $("<button>")
-          resultLink.addClass("btn btn-primary")
+          resultLink.addClass("btn btn-warning")
           resultLink.text("More Information")
           //button to add to favs
           var favButton = $("<button>")
@@ -124,7 +123,7 @@ $("#searchButton").on("click", function (event) {
           resultText.text("Release Year: " + searchResults[i].Year)
           //details button
           var resultLink = $("<button>")
-          resultLink.attr("class", "btn btn-primary")
+          resultLink.attr("class", "btn btn-warning")
           resultLink.text("More Information")
           //button to add to favs
           var favButton = $("<button>")
@@ -184,7 +183,7 @@ $("#searchButton").on("click", function (event) {
           resultText.addClass("card-text")
           resultText.text(searchResults[i].deck)
           var resultLink = $("<button>")
-          resultLink.attr("class", "btn btn-primary")
+          resultLink.attr("class", "btn btn-warning")
           resultLink.text("More Information")
 
           //button to add to favs
@@ -324,7 +323,7 @@ if (localStorage.getItem("titles") === null) {
 }
 function displayFavs() {
   $("#favContent").empty(); // empties out the html
-  var titleArr = JSON.parse(localStorage.getItem("titles"));
+  titleArr = JSON.parse(localStorage.getItem("titles"));
   // render fav titles 
   for (var i = 0; i < titleArr.length; i++) {
     var favHeader = $("<div>")
@@ -338,42 +337,33 @@ displayFavs()
 //on click of fav button for movies
 $(document.body).on("click", ".movieFav", function () {
   event.preventDefault();
-  console.log("fav button working")
   //grab title from button attribute
   var title = $(this).attr("title")
-  console.log(title)
   // Store the title into localStorage
   localStorage.setItem("title", title);
   titleArr.push(title);
-  console.log(titleArr)
   localStorage.setItem("titles", JSON.stringify(titleArr));
   displayFavs()
 });
 //on click of fav button for tv
 $(document.body).on("click", ".tvFav", function () {
   event.preventDefault();
-  console.log("fav button working")
   //grab title from button attribute
   var title = $(this).attr("title")
-  console.log(title)
   // Store the title into localStorage
   localStorage.setItem("title", title);
   titleArr.push(title);
-  console.log(titleArr)
   localStorage.setItem("titles", JSON.stringify(titleArr));
   displayFavs()
 });
 //on click of fav button for games
 $(document.body).on("click", ".gameFav", function () {
   event.preventDefault();
-  console.log("fav button working")
   //grab title from button attribute
   var title = $(this).attr("title")
-  console.log(title)
   // Store the title into localStorage
   localStorage.setItem("title", title);
   titleArr.push(title);
-  console.log(titleArr)
   localStorage.setItem("titles", JSON.stringify(titleArr));
   displayFavs()
 });
