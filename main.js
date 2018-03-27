@@ -49,19 +49,28 @@ $("#searchButton").on("click", function (event) {
           var resultTitle = $("<h5>")
           resultTitle.addClass("card-text")
           resultTitle.text(searchResults[i].Title)
+
           //years on air
           var resultText = $("<p>")
           resultText.addClass("card-text")
           resultText.text("Years on the Air: " + searchResults[i].Year)
           //link to details
           var resultLink = $("<button>")
-          resultLink.attr("class", "btn btn-primary")
+          resultLink.addClass("btn btn-primary")
           resultLink.text("More Information")
+
+          //button to add to favs
+          var favButton = $("<button>")
+          favButton.addClass("btn btn-secondary m-2 tvFav")
+          favButton.text("FAV")
+          //add atributes to track fav button
+          favButton.attr("title", searchResults[i].Title)
 
           //apend text to body 
           resultBody.append(resultTitle)
           resultBody.append(resultText)
           resultBody.append(resultLink)
+          resultBody.append(favButton)
           resultDiv.append(resultImg)
           //append body to card div
           resultDiv.append(resultBody)
@@ -71,8 +80,6 @@ $("#searchButton").on("click", function (event) {
           resultLink.addClass("tvLink")
           //display results to DOM
           $("#searchResults").append(resultDiv)
-
-
 
         }
       }
@@ -129,17 +136,28 @@ $("#searchButton").on("click", function (event) {
           var resultLink = $("<button>")
           resultLink.attr("class", "btn btn-primary")
           resultLink.text("More Information")
+          //button to add to favs
+          var favButton = $("<button>")
+          favButton.addClass("btn btn-secondary m-2 movieFav")
+          favButton.text("FAV")
+
           //append results to body 
           resultBody.append(resultTitle)
           resultBody.append(resultText)
           resultBody.append(resultLink)
+          resultBody.append(favButton)
+
           //append body to div
           resultDiv.append(resultImg)
           resultDiv.append(resultBody)
+
           //attribute to track details button
           resultLink.attr("result-number", i)
           resultLink.attr("title", searchResults[i].Title)
           resultLink.addClass("movieLink")
+          //add atributes to track fav button
+          favButton.attr("title", searchResults[i].Title)
+
 
           //display results on DO<M
           $("#searchResults").append(resultDiv)
@@ -163,7 +181,7 @@ $("#searchButton").on("click", function (event) {
           text: "Please try again",
           icon: "error",
         });
-    
+
       } else {
         searchResults = response.results
         for (var i = 0; i < searchResults.length; i++) {
@@ -185,18 +203,25 @@ $("#searchButton").on("click", function (event) {
           var resultLink = $("<button>")
           resultLink.attr("class", "btn btn-primary")
           resultLink.text("More Information")
-          //var resultImgRow = $("<tr>")
-          // var resultTitleRow = $("<tr>")
-          // var resultTextRow = $("<tr>")
-          // var resultTable = $("<table>")
+          
+          //button to add to favs
+          var favButton = $("<button>")
+          favButton.addClass("btn btn-secondary m-2 gameFav")
+          favButton.text("FAV")
+          //add atributes to track fav button
+          favButton.attr("title", searchResults[i].name)
+
           resultBody.append(resultTitle)
           resultBody.append(resultText)
           resultBody.append(resultLink)
           resultDiv.append(resultImg)
           resultDiv.append(resultBody)
+          resultBody.append(favButton)
           resultLink.attr("result-number", i)
           resultLink.addClass("link")
           $("#searchResults").append(resultDiv)
+
+          
         }
       }
     });
@@ -231,8 +256,8 @@ $(document.body).on("click", ".link", function () {
   if (searchResults[i].description == null) {
     var imageImg = $("<img>")
     imageImg.addClass("pull-left")
-    imageImg.attr("src",searchResults[i].image.original_url)
-    imageImg.attr("style","width:20%;height:auto;")
+    imageImg.attr("src", searchResults[i].image.original_url)
+    imageImg.attr("style", "width:20%;height:auto;")
 
     descriptionP.append(imageImg)
     descriptionP.append(searchResults[i].deck)
@@ -263,7 +288,7 @@ $(document.body).on("click", ".tvLink", function () {
     "headers": {
       "Cache-Control": "no-cache",
       "Postman-Token": "17addf34-eefe-4c61-9807-69c58abb307a",
-      
+
     }
   }
 
@@ -276,7 +301,7 @@ $(document.body).on("click", ".tvLink", function () {
       contentDiv.addClass("card-body align-center")
 
       var videoTag = $("<iframe>")
-      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId )
+      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId)
       videoTag.attr("width", "400px")
       videoTag.attr("height", "250px")
       contentDiv.append(videoTag)
@@ -318,7 +343,7 @@ $(document.body).on("click", ".movieLink", function () {
   $.ajax(settings).then(function (response) {
     var vidResult = response.items
     for (var i = 0; i < vidResult.length; i++) {
-      
+
 
       var cardDiv = $("<div>")
       cardDiv.addClass("card align-center m-2")
@@ -326,9 +351,9 @@ $(document.body).on("click", ".movieLink", function () {
       contentDiv.addClass("card-body align-center")
 
       var videoTag = $("<iframe>")
-      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId )
+      videoTag.attr("src", "https://www.youtube.com/embed/" + vidResult[i].id.videoId)
       videoTag.attr("width", "400px")
-   
+
       contentDiv.append(videoTag)
 
 
@@ -349,3 +374,85 @@ $(document.body).on("click", ".movieLink", function () {
 
 })//closes tv click 
 
+
+ //add favorites section.... 
+
+var titleArr = []
+
+function displayFavs() {
+
+  $("#favContent").empty(); // empties out the html
+
+  var titleArr = JSON.parse(localStorage.getItem("titles"));
+
+  // render fav titles 
+  for (var i = 0; i < titleArr.length; i++) {
+    var favHeader = $("<div>")
+    favHeader.addClass("card-header")
+    favHeader.text(titleArr[i])
+    $("#favContent").append(favHeader)
+  }
+
+}
+
+//render existing favs on page when page loads
+displayFavs()
+
+
+
+//on click of fav button for movies
+$(document.body).on("click", ".movieFav", function () {
+  event.preventDefault();
+  console.log("fav button working")
+
+  //grab title from button attribute
+  var title = $(this).attr("title")
+  console.log(title)
+  // Store the title into localStorage
+  localStorage.setItem("title", title);
+
+  titleArr.push(title);
+  console.log(titleArr)
+  localStorage.setItem("titles", JSON.stringify(titleArr));
+
+  displayFavs()
+
+});
+
+//on click of fav button for tv
+$(document.body).on("click", ".tvFav", function () {
+  event.preventDefault();
+  console.log("fav button working")
+
+  //grab title from button attribute
+  var title = $(this).attr("title")
+  console.log(title)
+  // Store the title into localStorage
+  localStorage.setItem("title", title);
+
+  titleArr.push(title);
+  console.log(titleArr)
+  localStorage.setItem("titles", JSON.stringify(titleArr));
+
+  displayFavs()
+
+});
+
+//on click of fav button for games
+$(document.body).on("click", ".gameFav", function () {
+  event.preventDefault();
+  console.log("fav button working")
+
+  //grab title from button attribute
+  var title = $(this).attr("title")
+  console.log(title)
+  // Store the title into localStorage
+  localStorage.setItem("title", title);
+
+  titleArr.push(title);
+  console.log(titleArr)
+  localStorage.setItem("titles", JSON.stringify(titleArr));
+
+  displayFavs()
+
+});
