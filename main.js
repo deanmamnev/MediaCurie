@@ -1,6 +1,6 @@
 var searchResults = [];
 //on click of homebutton
-$("#home").on("click", function(event){
+$("#home").on("click", function (event) {
   event.preventDefault()
   //empty results div
   $("#searchResults").empty()
@@ -10,8 +10,8 @@ $("#searchButton").on("click", function (event) {
   $("#searchResults").empty()
   //$("#searchResults").text("<img src='mediacurie-logo-animated.gif'>")
   var loadingImg = $("<img>")
-  loadingImg.attr("src","mediacurie-logo-animated.gif")
-  loadingImg.attr("style","align:center;margin:auto;")
+  loadingImg.attr("src", "mediacurie-logo-animated.gif")
+  loadingImg.attr("style", "align:center;margin:auto;")
   $("#searchResults").append(loadingImg)
   //store user input as topic var
   var topic = $("#searchField").val().trim()
@@ -152,7 +152,7 @@ $("#searchButton").on("click", function (event) {
   }
   if ($("#searchOptions").val() == "videogames") {
     queryURL =
-      "https://www.giantbomb.com/api/search/?api_key=a74fc2e122070c900f130b1686762de83101e99e&format=json&query=" + topic+ "&resources=game"
+      "https://www.giantbomb.com/api/search/?api_key=a74fc2e122070c900f130b1686762de83101e99e&format=json&query=" + topic + "&resources=game"
     $.ajax({
       "url": queryURL,//+$("#searchField").val(),
       "method": "GET",
@@ -186,7 +186,7 @@ $("#searchButton").on("click", function (event) {
           var resultLink = $("<button>")
           resultLink.attr("class", "btn btn-primary")
           resultLink.text("More Information")
-          
+
           //button to add to favs
           var favButton = $("<button>")
           favButton.addClass("btn btn-secondary m-2 gameFav")
@@ -202,7 +202,7 @@ $("#searchButton").on("click", function (event) {
           resultLink.attr("result-number", i)
           resultLink.addClass("link")
           $("#searchResults").append(resultDiv)
-          
+
         }
       }
     });
@@ -317,8 +317,11 @@ $(document.body).on("click", ".movieLink", function () {
     }
   });
 })//closes tv click 
- //add favorites section.... 
+//add favorites section.... 
 var titleArr = []
+if (localStorage.getItem("titles") === null) {
+  localStorage.setItem("titles", "[]")
+}
 function displayFavs() {
   $("#favContent").empty(); // empties out the html
   var titleArr = JSON.parse(localStorage.getItem("titles"));
