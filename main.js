@@ -3,7 +3,11 @@ var searchResults = [];
 $("#searchButton").on("click", function (event) {
   event.preventDefault()
   $("#searchResults").empty()
-  $("#searchResults").html("Loading...")
+  //$("#searchResults").text("<img src='mediacurie-logo-animated.gif'>")
+  var loadingImg = $("<img>")
+  loadingImg.attr("src","mediacurie-logo-animated.gif")
+  loadingImg.attr("style","align:center;margin:auto;")
+  $("#searchResults").append(loadingImg)
 
   //store user input as topic var
   var topic = $("#searchField").val()
