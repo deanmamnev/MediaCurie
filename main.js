@@ -23,7 +23,7 @@ $("#searchButton").on("click", function (event) {
     $.ajax({
       "async": true,
       "crossDomain": true,
-      "url": "http://www.omdbapi.com/?type=series&s=" + topic + "&apikey=5b2c9d95",
+      "url": "https://www.omdbapi.com/?type=series&s=" + topic + "&apikey=5b2c9d95",
       "method": "GET",
 
     }).then(function (response) {
@@ -104,7 +104,7 @@ $("#searchButton").on("click", function (event) {
     $.ajax({
       "async": true,
       "crossDomain": true,
-      "url": "http://www.omdbapi.com/?&s=" + topic + "&type=movie&apikey=5b2c9d95",
+      "url": "https://www.omdbapi.com/?&s=" + topic + "&type=movie&apikey=5b2c9d95",
       "method": "GET",
 
     }).then(function (response) {
@@ -178,7 +178,7 @@ $("#searchButton").on("click", function (event) {
 
   if ($("#searchOptions").val() == "videogames") {
     queryURL =
-      "http://www.giantbomb.com/api/search/?api_key=a74fc2e122070c900f130b1686762de83101e99e&format=json&query=" + $("#searchField").val() + "&resources=game"
+      "https://www.giantbomb.com/api/search/?api_key=a74fc2e122070c900f130b1686762de83101e99e&format=json&query=" + $("#searchField").val() + "&resources=game"
     $.ajax({
       "url": queryURL,//+$("#searchField").val(),
       "method": "GET",
