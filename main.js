@@ -11,7 +11,7 @@ $("#searchButton").on("click", function (event) {
   $("#searchResults").empty()
   //$("#searchResults").text("<img src='mediacurie-logo-animated.gif'>")
   var loadingImg = $("<img>")
-  loadingImg.attr("src","mediacurie-logo-animated.gif")
+  loadingImg.attr("src","MediaCurie-Logo-Animated.gif")
   loadingImg.attr("style","align:center;margin:auto;")
   $("#searchResults").append(loadingImg)
 
